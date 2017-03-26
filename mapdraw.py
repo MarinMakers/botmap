@@ -3,6 +3,11 @@ from mpl_toolkits.basemap import Basemap
 import matplotlib.pyplot as plt
 from datetime import datetime
 # miller projection
+
+def Datapoint(self,test):
+	return "Hello"
+
+
 map = Basemap(projection='merc',llcrnrlat=-80,urcrnrlat=80,\
             llcrnrlon=-180,urcrnrlon=180,lat_ts=20,resolution='c')
 # plot coastlines, draw label meridians and parallels.
@@ -21,11 +26,11 @@ with open("ip_coordinates.txt") as f:
 		lat = float(points[1])
 		lng = float(points[0])
 		x,y = map(lat,lng)
-		point = map.plot(x,y,'ro',markersize=10)
+		point = map.plot(x,y,'ro',markersize=5)
 		# plt.annotate(line,(x,y))
 
 
-date = datetime.utcnow()
+date = datetime.now()
 plt.title('Current Assailant Map for %s' % date.strftime("%d %b %Y %H:%M:%S"))
 plt.show()
 
