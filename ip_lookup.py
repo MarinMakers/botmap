@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 from urllib.request import urlopen
 from contextlib import closing
 from pprint import pprint
