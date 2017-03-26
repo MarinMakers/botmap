@@ -14,7 +14,9 @@ destination_filename = "ip_coordinates.txt"
 ip_file = open(source_filename, "r")
 coordinate_file = open(destination_filename, "w")
 
+iterator = 0;
 for ip in ip_file:
+	iterator += 1
 	ip = ip[:-1]
 	url = source_url + ip
 	with closing(urlopen(url)) as response:
@@ -22,5 +24,6 @@ for ip in ip_file:
 		location_latitude = location['latitude']
 		location_longitude = location['longitude']
 		output_string = str(location_latitude) + "," + str(location_longitude) + "\n"
+		print("IP " + str(iterator) + ": " + output_string, end="");
 		coordinate_file.write(output_string)
 
