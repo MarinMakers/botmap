@@ -45,7 +45,8 @@ for i, ip in enumerate(ip_list):
 		location = json.loads(response.read().decode("UTF-8"))	
 		location_latitude = location['latitude']
 		location_longitude = location['longitude']
-		output_string = str(location_latitude) + "," + str(location_longitude) + "\n"
+		location_city = location['city']
+		output_string = str(location_latitude) + "," + str(location_longitude) + "," + location_city + "," + ip + "\n"
 		print("\r" + loadingBar(i + 1, len(ip_list)), end="")
 		coordinate_file.write(output_string)
 print("\nComplete!")
