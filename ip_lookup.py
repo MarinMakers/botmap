@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 from urllib.request import urlopen
 from contextlib import closing
 from pprint import pprint
@@ -20,5 +22,5 @@ url = 'http://freegeoip.net/json/218.65.30.122'
 
 ip_file = open("ips.txt", "r")
 for line in ip_file:
-	print("IP: " + line)
+	print("IP: " + line, end="")
 
