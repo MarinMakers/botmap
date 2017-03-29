@@ -28,13 +28,13 @@ def loadingBar(current_item, max_items):
 source_url = 'http://freegeoip.net/json/'
 
 source_filename = "ips.txt"
-destination_filename = "ip_coordinates.txt"
+destination_filename = "ip_coordinates.csv"
 
 ip_file = open(source_filename, "r")
 coordinate_file = open(destination_filename, "w")
 
 ip_list = []
-for ip in ip_file:
+for i, ip in enumerate(ip_file):
 	ip = ip[:-1]
 	url = source_url + ip
 	with closing(urlopen(url)) as response:
@@ -43,7 +43,8 @@ for ip in ip_file:
 		location_longitude = location['longitude']
 		location_city = location['city']
 		output_string = str(location_latitude) + "," + str(location_longitude) + "," + location_city + "," + ip + "\n"
-		print("\r" + loadingBar(i + 1, len(ip_list)), end="")
+		# print("\r" + loadingBar(i + 1, len(ip_list)), end="")
+		print(i)
 		coordinate_file.write(output_string)
 print("\nComplete!")
 

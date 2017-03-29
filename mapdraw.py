@@ -20,7 +20,7 @@ map.fillcontinents(color='green',lake_color='blue')
 # shade the night areas, with alpha transparency so the
 # map shows through. Use current time in UTC.
 
-with open("ip_coordinates.txt") as f:
+with open("ip_coordinates.csv") as f:
 	for line in f:
 		points = line.split(",")
 		lat = float(points[1])
