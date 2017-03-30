@@ -5,6 +5,8 @@ from contextlib import closing
 from pprint import pprint
 import json
 import math
+import sys
+
 
 def loadingBar(current_item, max_items):
 	bar_length = 30
@@ -24,13 +26,22 @@ def loadingBar(current_item, max_items):
 
 	return output_string + loading_section + " "
 
+
 # Automatically geolocate the connecting IP
 source_url = 'http://freegeoip.net/json/'
 
-source_filename = "ips.txt"
+try:
+	source_filename = sys.argv[1]
+except IndexError:
+	source_filename = "ips.txt"
+
 destination_filename = "ip_coordinates.csv"
 
-ip_file = open(source_filename, "r")
+try:
+	ip_file = open(source_filename, "r")
+except:
+	raise ValueError("Invalid source file name %s. Exiting.." % source_filename)
+
 coordinate_file = open(destination_filename, "w")
 
 ip_list = []
@@ -43,6 +54,8 @@ for i, ip in enumerate(ip_file):
 		location_longitude = location['longitude']
 		location_city = location['city']
 		output_string = str(location_latitude) + "," + str(location_longitude) + "," + location_city + "," + ip + "\n"
+
+		### Something is wrong with the Loading bar feature. Revisit. For now, printing iterator on line below.
 		# print("\r" + loadingBar(i + 1, len(ip_list)), end="")
 		print(i)
 		coordinate_file.write(output_string)
