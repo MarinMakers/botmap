@@ -69,7 +69,7 @@ for i, ip in enumerate(ip_file):
 			location_latitude = location['latitude']
 			location_longitude = location['longitude']
 			location_city = location['city']
-			output_string = str(location_latitude) + "," + str(location_longitude) + "," + location_city + "," + ip + "\n"
+			output_string = str(location_latitude) + "," + str(location_longitude) + "," + location_city + "," + ip 
 
 			### Something is wrong with the Loading bar feature. Revisit. For now, printing iterator on line below.
 			# print("\r" + loadingBar(i + 1, len(ip_list)), end="")
