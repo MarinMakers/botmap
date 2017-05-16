@@ -40,7 +40,7 @@ This employed a FrontEnd D3js library, [DataMaps](http://datamaps.github.io/). I
 
 ![BA](http://i.imgur.com/fy6nUyz.png)
 
-# Shang Hai
+# Shanghai
 
 ![CHI](http://i.imgur.com/VHz18Ir.png)
 
