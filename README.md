@@ -30,4 +30,4 @@ Then again with a month and a half worth of data and fresh coat of paint. . .
 
 ![third map](http://i.imgur.com/BGB4Eb1.png)
 
-This employed a FrontEnd D3js library, [DataMaps](http://datamaps.github.io/). Its cross-platform accessability, high resolution SVG map and plot labels(!!!) were significant improvements over the previous implement. This also featured cleaner low-light color scheme.
+This employed a FrontEnd D3js library, [DataMaps](http://datamaps.github.io/). Its cross-platform accessability, high resolution SVG map and plot labels(!!!) were significant improvements over the previous implementation. This also featured a cleaner, low-light color scheme.
