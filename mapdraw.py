@@ -11,12 +11,13 @@ def Datapoint(self,test):
 map = Basemap(projection='merc',llcrnrlat=-80,urcrnrlat=80,\
             llcrnrlon=-180,urcrnrlon=180,lat_ts=20,resolution='c')
 # plot coastlines, draw label meridians and parallels.
+map.fillcontinents(color='#0F0F0F',lake_color='#007AE2')
 map.drawcoastlines()
+map.drawcountries(linewidth=0.5, linestyle='solid', color='#E6E6E6', antialiased=1, ax=None, zorder=None)
 map.drawparallels(np.arange(-90,90,30),labels=[1,0,0,0])
 map.drawmeridians(np.arange(map.lonmin,map.lonmax+30,60),labels=[0,0,0,1])
 # fill continents 'coral' (with zorder=0), color wet areas 'aqua'
-map.drawmapboundary(fill_color='blue')
-map.fillcontinents(color='green',lake_color='blue')
+map.drawmapboundary(fill_color='#007AE2')
 # shade the night areas, with alpha transparency so the
 # map shows through. Use current time in UTC.
 
@@ -26,7 +27,7 @@ with open("ip_coordinates.csv") as f:
 		lat = float(points[1])
 		lng = float(points[0])
 		x,y = map(lat,lng)
-		point = map.plot(x,y,'ro',markersize=5)
+		point = map.plot(x,y,'ro',markersize=4, color="#ffc700")
 		# plt.annotate(line,(x,y))
 
 
