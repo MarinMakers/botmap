@@ -1,9 +1,9 @@
 # BotMap
-######A map of the 🤖net attacking our server
+###### A map of the 🤖net attacking our server
 
 ![latest map](http://i.imgur.com/CvZjrcN.png)
 
-##Premise
+## Premise
 
 So my friends and I have been managing CentOS for the past couple of years in an effort to save money and have autonomy from private hosting services. After being port-forwarded, our most recent server quickly caught the attention of a scraper. Brute-force attacks soon followed, and `su -` reports like this were a **daily** occurance: 
 
@@ -13,9 +13,9 @@ I implemented fail2ban ASAP (as everyone should), and before long the daily atta
 
 Sean and I began to whip up a means to find this out.
 
-##Pythonic Approach
+## Pythonic Approach
 
-####Our first model used MatPlotLib, a Python 2.x data plotting library, to create our map.
+#### Our first model used MatPlotLib, a Python 2.x data plotting library, to create our map.
 
 Pipng the list of banned IPs from `fail2ban-client status sshd`, we wrote a [simple script](https://github.com/MarinMakers/attackermap/blob/master/ip_lookup.py) to convert these IPv4 addresses to geolocation using the [freegeoip API](freegeoip.net). This data was then parsed by [mapdraw](https://github.com/MarinMakers/attackermap/blob/master/mapdraw.py) to populate a navigatible map.
 
@@ -25,8 +25,8 @@ Then again with a month and a half worth of data and fresh coat of paint. . .
 
 ![second map](http://i.imgur.com/c5YulOD.png)
 
-##HTML
-####Python is well and good for afternoon-sprint projects, but having to install huge dependencies on everyone's machine is a hastle. Better to move towards a Web stack. 
+## HTML
+#### Python is well and good for afternoon-sprint projects, but having to install huge dependencies on everyone's machine is a hastle. Better to move towards a Web stack. 
 
 ![third map](http://i.imgur.com/BGB4Eb1.png)
 
