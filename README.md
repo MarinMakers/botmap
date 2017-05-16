@@ -1,7 +1,7 @@
 # BotMap
 ###### A map of the 🤖net attacking our server
 
-![latest map](http://i.imgur.com/CvZjrcN.png)
+![latest map](http://i.imgur.com/478C0NJ.png)
 
 ## Premise
 
@@ -17,7 +17,7 @@ Sean and I began to whip up a means to find this out.
 
 #### Our first model used MatPlotLib, a Python 2.x data plotting library, to create our map.
 
-Pipng the list of banned IPs from `fail2ban-client status sshd`, we wrote a [simple script](https://github.com/MarinMakers/attackermap/blob/master/ip_lookup.py) to convert these IPv4 addresses to geolocation using the [freegeoip API](freegeoip.net). This data was then parsed by [mapdraw](https://github.com/MarinMakers/attackermap/blob/master/mapdraw.py) to populate a navigatible map.
+Pipng the list of banned IPs from `fail2ban-client status sshd`, we wrote a [simple script](https://github.com/MarinMakers/botmap/blob/master/ip_lookup.py) to convert these IPv4 addresses to geolocation using the [freegeoip API](freegeoip.net). This data was then parsed by [mapdraw](https://github.com/MarinMakers/botmap/blob/master/mapdraw.py) to populate a navigatible map.
 
 ![first map](http://i.imgur.com/NmBSpyH.png)
 
@@ -31,3 +31,17 @@ Then again with a month and a half worth of data and fresh coat of paint. . .
 ![third map](http://i.imgur.com/BGB4Eb1.png)
 
 This employed a FrontEnd D3js library, [DataMaps](http://datamaps.github.io/). Its cross-platform accessability, high resolution SVG map and plot labels(!!!) were significant improvements over the previous implementation. This also featured a cleaner, low-light color scheme.
+
+
+## Conclusion
+
+### Of the 1,430 different attack sites, the top two highest-concentrated cities were:
+# Buenos Aires
+
+![BA](http://i.imgur.com/fy6nUyz.png)
+
+# China
+
+![CHI](http://i.imgur.com/VHz18Ir.png)
+
+Will continue to post more information as it comes.
