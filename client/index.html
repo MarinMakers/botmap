@@ -5,9 +5,9 @@
 	<title>BotMap</title>
 
 	<!-- JQuery -->
-	<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
-	<style rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.12.1/themes/vader/jquery-ui.css"></style>
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/vader/jquery-ui.css">
+  <script src="http://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="http://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 	<!--Datamaps & D3 -->
 	<script src="http://d3js.org/d3.v3.min.js"></script>
@@ -26,7 +26,15 @@
 		#container1 {
 			position: relative;
 		}
+		#slider { 
+			margin: 10px; 
+			margin-left: 40%;
+			width: 50%;
+		}
 	</style>
+	<script type="text/javascript">
+		
+	</script>
 </head>
 <body>
 	<div id="container1"></div>
@@ -47,7 +55,7 @@
 				plot: '#0cff0c'
 			},
 			done: () => {
-				console.log("Done.")
+				console.log("Map loaded.")
 			},
 			geographyConfig: {
 				dataUrl: null, //if not null, datamaps will fetch the map JSON (currently only supports topojson)
@@ -1540,11 +1548,20 @@
 		//bubbles, custom popup on hover template
 		map.bubbles(plots);
 
+		$(function(){
+			$("#slider").slider({
+				min:5,
+				max:65,
+				value: map.options.bubblesConfig.fillOpacity*100,
+				change: (event,ui)=>{
+					d3.selectAll("circle").style("fill-opacity",ui.value/100);
+				}
+			});
+		});
 		$(window).on('resize', function() {
 			map.resize();
 		});
 		
-		$("#slider").slider();
 	</script>
 </body>
 </html>
