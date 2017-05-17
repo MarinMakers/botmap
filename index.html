@@ -32,9 +32,6 @@
 			width: 50%;
 		}
 	</style>
-	<script type="text/javascript">
-		
-	</script>
 </head>
 <body>
 	<div id="container1"></div>
@@ -64,7 +61,7 @@
 				borderOpacity: 1,
 				borderColor: '#91A3B0',
 				popupTemplate: function(geography, data) { //this function should just return a string
-				  return '<div class="hoverinfo"><strong>' + geography.properties.name + '</strong></div>';
+				  return `<div class="hoverinfo"><strong>${geography.properties.name}</strong></div>`;
 				},
 				popupOnHover: true, //disable the popup while hovering
 				highlightOnHover: false,
@@ -1540,6 +1537,42 @@
 			{"latitude":25.0389,"longitude":102.7183,"city":"Kunming","ip":"218.63.0.115"}];
 
 
+		function topCityCount(int) {
+			if (typeof(int) != "number"||int<1||int > plots.length) {
+				throw new Error(`Invalid argument in topCityCount() - ${int}`);
+				return;
+			}
+			var dict = {};
+			//Compile list of city,iptable objects by breaking down plots.
+			for (var i = 0; i < plots.length; i++) {
+				var city;
+				if (plots[i].city!="") {
+					city = plots[i].city;
+					dict[city] ? dict[city].iptable.push(plots[i].ip) : dict[city] = {
+						name: city, 
+						iptable:[ plots[i].ip ]
+					};
+				}
+			}
+
+			// Object to Array.
+			var cityArr = [];
+			for (var i in dict) {
+				cityArr.push(dict[i]);
+			}
+			// Sort array greatest to least.
+			cityArr.sort((a,b) => {
+				return b.iptable.length - a.iptable.length;
+			})
+
+			cityArr = cityArr.splice(0,int);
+			for (var i = 0; i < cityArr.length; i++) {
+				console.log(`${cityArr[i].iptable.length}\t${cityArr[i].name}`)
+			}
+		}
+
+		console.log(topCityCount(30));
+
 		plots.forEach((element)=> {
 			element.radius = radius;
 			element.fillKey = "plot";
@@ -1550,8 +1583,8 @@
 
 		$(function(){
 			$("#slider").slider({
-				min:3,
-				max:65,
+				min:5,
+				max:75,
 				value: map.options.bubblesConfig.fillOpacity*100,
 				slide: (event,ui)=>{
 					d3.selectAll("circle").style("fill-opacity",ui.value/100);
