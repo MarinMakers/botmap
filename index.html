@@ -5,15 +5,18 @@
 	<title>BotMap</title>
 
 	<!-- JQuery -->
-	<link rel="stylesheet" href="jquery/vader.css">
-	<script src="jquery/jquery.js"></script>
-	<script src="jquery/jquery-ui.js"></script>
+	<script src="jquery-3.2.1.js"></script>
+	<script src="jquery-ui-1.12.1/jquery-ui.js"></script>
+	<link rel="stylesheet" type="text/css" href="jquery-ui-1.12.1/jquery-ui.css">
 
 	<!--Datamaps & D3 -->
 	<script src="d3/d3.v3.min.js"></script>
 	<script src="d3/topojson.js"></script>
 	<script src="d3/world.js"></script>
 	<style type="text/css">
+		* {
+			outline: none;
+		}
 		html{
 			height: 100%;
 		}
@@ -26,18 +29,33 @@
 		#container1 {
 			position: relative;
 		}
-		#slider { 
-			margin: 10px; 
+		#toolbar{
+			margin: 10px;
 			margin-left: 40%;
-			width: 50%;
+			display: flex;
+			float: left;
+			width:400px;
+		}
+		#up,#down{
+			width: 20px !important;
+			height:20px;
+			padding: 0;
+		}
+		#slider {
+			width:50%;
+			margin-right: 10px;
 		}
 	</style>
 </head>
 <body>
 	<div id="container1"></div>
-	<div id="slider"></div>
+	<div id="toolbar">
+		<div id="up"></div>
+		<div id="down"></div>
+		<div id="spinner"></div>
+		<div id="slider"></div>
+	</div>
 	<script>
-		
 		//basic map config with custom fills, mercator projection
 		var radius = 3;
 		var map = new Datamap({
@@ -1571,7 +1589,7 @@
 			}
 		}
 
-		console.log(topCityCount(30));
+		console.log(topCityCount(10));
 
 		plots.forEach((element)=> {
 			element.radius = radius;
@@ -1582,6 +1600,20 @@
 		map.bubbles(plots);
 
 		$(function(){
+			$("#up").button({
+				icon: "ui-icon-circle-arrow-n"
+			}).on("click",(event,ui)=> {
+				if (radius<5) radius+=0.25;
+				d3.selectAll("circle").style("r",radius);
+			})
+
+			$("#down").button({
+				icon: "ui-icon-circle-arrow-s"
+			}).on("click",(event,ui)=> {
+				if (radius>1.5) radius-=0.25;
+				d3.selectAll("circle").style("r",radius);
+			})
+
 			$("#slider").slider({
 				min:5,
 				max:75,
