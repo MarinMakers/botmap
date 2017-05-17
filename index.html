@@ -34,7 +34,7 @@
 			margin-left: 40%;
 			display: flex;
 			float: left;
-			width:400px;
+			width:50%;
 		}
 		#up,#down{
 			width: 20px !important;
@@ -42,8 +42,8 @@
 			padding: 0;
 		}
 		#slider {
-			width:50%;
-			margin-right: 10px;
+			width: calc(100% - 50px);
+			margin-left: 10px;
 		}
 	</style>
 </head>
@@ -52,7 +52,6 @@
 	<div id="toolbar">
 		<div id="up"></div>
 		<div id="down"></div>
-		<div id="spinner"></div>
 		<div id="slider"></div>
 	</div>
 	<script>
