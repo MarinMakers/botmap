@@ -1,27 +1,50 @@
 <!DOCTYPE html>
-<meta charset="utf-8">
+<html lang="en">
 <head>
+	<meta charset="utf-8">
 	<title>BotMap</title>
-</head>
-<body style="background-color:black">
+
+	<!-- JQuery -->
+	<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+	<style rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.12.1/themes/vader/jquery-ui.css"></style>
+
+	<!--Datamaps & D3 -->
 	<script src="http://d3js.org/d3.v3.min.js"></script>
 	<script src="http://d3js.org/topojson.v1.min.js"></script>
-	<!-- I recommend you host this file on your own, since this will change without warning -->
 	<script src="http://datamaps.github.io/scripts/datamaps.world.min.js"></script>
-	<div id="container1" style="position: relative;  min-height: 800px;"></div>
-
+	<style type="text/css">
+		html{
+			height: 100%;
+		}
+		body {
+			height:100%;
+			background-color: black;
+			margin:0;
+			border:0;
+		}
+		#container1 {
+			position: relative;
+		}
+	</style>
+</head>
+<body>
+	<div id="container1"></div>
+	<div id="slider"></div>
 	<script>
+		
 		//basic map config with custom fills, mercator projection
 		var radius = 3;
 		var map = new Datamap({
 			scope: 'world',
+			height:null,
+			width:null,
+			responsive:true,
 			element: document.getElementById('container1'),
 			projection: 'mercator',
-			height:800,
 			fills: {
-				defaultFill: '#1D1E20',
-				lt50: 'rgba(0,244,244,0.9)',
-				gt50: '#02c14d'
+				defaultFill: 'rgba(29, 30, 32, 1.00)',
+				plot: '#0cff0c'
 			},
 			done: () => {
 				console.log("Done.")
@@ -31,33 +54,33 @@
 				hideAntarctica: true,
 				borderWidth: 1,
 				borderOpacity: 1,
-				borderColor: '#FDFDFD',
+				borderColor: '#91A3B0',
 				popupTemplate: function(geography, data) { //this function should just return a string
 				  return '<div class="hoverinfo"><strong>' + geography.properties.name + '</strong></div>';
 				},
 				popupOnHover: true, //disable the popup while hovering
-				highlightOnHover: true,
-				highlightFillColor: 'rgba(255,255,255,0.2)',
+				highlightOnHover: false,
+				highlightFillColor: 'rgba(44, 45, 47, 1.00)',
 				highlightBorderColor: 'rgba(255,255,255, 0.6)',
-				highlightBorderWidth: 2,
+				highlightBorderWidth: 1,
 				highlightBorderOpacity: 1
 			},
 			bubblesConfig: {
 				borderWidth: 0,
-				borderOpacity: 0.3,
+				borderOpacity: 0,
 				borderColor: '#FFFFFF',
 				popupOnHover: true,
 				radius: radius,
-				popupTemplate: function(geography, data) {
-				  return '<div class="hoverinfo"><strong>' + data.name + '</strong></div>';
+				popupTemplate: function(geo, data) {
+					return `<div class='hoverinfo'> ${(data.city ? '<strong>'+data.city+'</strong>' : "Unknown")}<br>${data.ip}</div>`;
 				},
-				fillOpacity: 0.75,
+				fillOpacity: 0.30,
 				animate: true,
 				highlightOnHover: true,
-				highlightFillColor: '#FC8D59',
-				highlightBorderColor: 'rgba(250, 15, 160, 0.2)',
-				highlightBorderWidth: 2,
-				highlightBorderOpacity: 1,
+				highlightFillColor: 'rgba(225, 40, 11, 1.00)',
+				highlightBorderColor: 'rgba(225, 40, 11, 0.3)',
+				highlightBorderWidth: 1,
+				highlightBorderOpacity: 0.35,
 				highlightFillOpacity: 0.85,
 				exitDelay: 100,
 				key: plots
@@ -68,12 +91,12 @@
 			//   RUS: {fillKey: 'lt50' },
 			//   CAN: {fillKey: 'lt50' },
 			//   GBR: {fillKey: 'lt50' },
-			//   BRA: {fillKey: 'gt50' },
-			//   ARG: {fillKey: 'gt50'},
-			//   COL: {fillKey: 'gt50' },
-			//   AUS: {fillKey: 'gt50' },
-			//   ZAF: {fillKey: 'gt50' },
-			//   MAD: {fillKey: 'gt50' }       
+			//   BRA: {fillKey: 'plot' },
+			//   ARG: {fillKey: 'plot'},
+			//   COL: {fillKey: 'plot' },
+			//   AUS: {fillKey: 'plot' },
+			//   ZAF: {fillKey: 'plot' },
+			//   MAD: {fillKey: 'plot' }       
 			// }
 		})
 
@@ -1511,15 +1534,17 @@
 
 		plots.forEach((element)=> {
 			element.radius = radius;
-			element.fillKey = "gt50";
+			element.fillKey = "plot";
 		})
 
 		//bubbles, custom popup on hover template
-		map.bubbles(plots, {
-			popupTemplate: function(geo, data) {
+		map.bubbles(plots);
 
-				return "<div class='hoverinfo'>" + (data.city ? data.city : "Unknown") + "</div>";
-			}
+		$(window).on('resize', function() {
+			map.resize();
 		});
+		
+		$("#slider").slider();
 	</script>
 </body>
+</html>
