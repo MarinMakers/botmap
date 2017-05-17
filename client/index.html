@@ -1550,10 +1550,10 @@
 
 		$(function(){
 			$("#slider").slider({
-				min:5,
+				min:3,
 				max:65,
 				value: map.options.bubblesConfig.fillOpacity*100,
-				change: (event,ui)=>{
+				slide: (event,ui)=>{
 					d3.selectAll("circle").style("fill-opacity",ui.value/100);
 				}
 			});
