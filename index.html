@@ -1590,7 +1590,54 @@
 		}
 
 		console.log(topCityCount(10));
+		
 
+		//temp
+		function promiseGet() {
+			var ipTempList = `101.128.192.30
+101.68.108.117
+103.207.39.231
+103.212.120.170
+103.224.166.179
+103.243.107.207
+104.12.69.44
+104.244.217.2
+105.101.138.67
+112.207.198.74
+112.228.177.163
+112.78.1.253
+113.102.171.181
+113.189.47.154
+113.205.179.127
+113.237.9.51
+113.98.193.58
+114.231.190.30
+114.245.252.31
+115.135.82.197
+115.204.116.124
+115.205.175.133`
+			var ipTempArr = ipTempList.split("\n");
+			var out = []
+			console.log(ipTempArr);
+			for (var i = 0; i <ipTempArr.length; i++) {
+					
+				out.push($.ajax({
+					dataType: "json",
+					url: `http://freegeoip.net/json/${ipTempArr[i]}`
+				}).then(function(data){
+					console.log("asdf");
+					return data;
+				}));
+			}
+			console.log(out);
+			Promise.all(out).then(function(arr) {
+				alert("Done");
+				console.log(arr);
+			})
+		
+		}
+		promiseGet();
+		//end temp
 		plots.forEach((element)=> {
 			element.radius = radius;
 			element.fillKey = "plot";
