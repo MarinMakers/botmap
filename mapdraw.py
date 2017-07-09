@@ -2,7 +2,7 @@ import numpy as np
 from mpl_toolkits.basemap import Basemap
 import matplotlib.pyplot as plt
 from datetime import datetime
-# miller projection
+# mercator projection
 
 def Datapoint(self,test):
 	return "Hello"
