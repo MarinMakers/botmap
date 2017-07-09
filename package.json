@@ -1,0 +1,22 @@
+{
+  "name": "botmap",
+  "version": "1.0.0",
+  "description": "Hacker map",
+  "main": "jquery-3.2.1.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MarinMakers/botmap.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MarinMakers/botmap/issues"
+  },
+  "homepage": "https://github.com/MarinMakers/botmap#readme",
+  "dependencies": {
+    "knex": "^0.13.0"
+  }
+}
