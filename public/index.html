@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>BotMap</title>
+
+	<!-- JQuery -->
+	<script src="jquery-3.2.1.js"></script>
+	<script src="jquery-ui-1.12.1/jquery-ui.js"></script>
+	<link rel="stylesheet" type="text/css" href="jquery-ui-1.12.1/jquery-ui.css">
+
+	<!--Datamaps & D3 -->
+	<script src="d3/d3.v3.min.js"></script>
+	<script src="d3/topojson.js"></script>
+	<script src="d3/world.js"></script>
+	<style type="text/css">
+		* {
+			outline: none;
+		}
+		html{
+			height: 100%;
+		}
+		body {
+			height:100%;
+			background-color: black;
+			margin:0;
+			border:0;
+		}
+		#container1 {
+			height: 100% !important;
+			padding-bottom: 0 !important;
+			overflow: hidden;
+		}
+		#toolbar{
+			position: fixed;
+			margin: 10px;
+			display: flex;
+			float: left;
+			width: 50%;
+			right: 30px;
+			z-index: 20;
+			bottom: 0px;
+		}
+		#up,#down{
+			width: 20px !important;
+			height:20px;
+			padding: 0;
+		}
+		#slider {
+			margin-top: 3px;
+			width: calc(100% - 50px);
+			margin-left: 10px;
+		}
+	</style>
+</head>
+<body>
+	<div id="container1"></div>
+	<div id="toolbar">
+		<div id="up"></div>
+		<div id="down"></div>
+		<div id="slider"></div>
+	</div>
+	<script>
+		//basic map config with custom fills, mercator projection
+		var radius = 3;
+		var plots;
+		var map = new Datamap({
+			scope: 'world',
+			height:null,
+			width:null,
+			responsive:true,
+			element: document.getElementById('container1'),
+			setProjection: function(element) {
+				var projection = d3.geo.mercator()
+					.center([5, 18])
+					.rotate([0, 0])
+					.scale(230)
+					.translate([element.offsetWidth / 2, element.offsetHeight / 2]);
+				var path = d3.geo.path()
+					.projection(projection);
+
+				return {path: path, projection: projection};
+			},
+			fills: {
+				defaultFill: 'rgba(29, 30, 32, 1.00)',
+				plot: '#0cff0c'
+			},
+			done: () => {
+				console.log("Map loaded.")
+			},
+			geographyConfig: {
+				dataUrl: null, //if not null, datamaps will fetch the map JSON (currently only supports topojson)
+				hideAntarctica: true,
+				borderWidth: 1,
+				borderOpacity: 1,
+				borderColor: '#91A3B0',
+				popupTemplate: function(geography, data) { //this function should just return a string
+					return `<div class="hoverinfo"><strong>${geography.properties.name}</strong></div>`;
+				},
+				popupOnHover: true, //disable the popup while hovering
+				highlightOnHover: false,
+				highlightFillColor: 'rgba(44, 45, 47, 1.00)',
+				highlightBorderColor: 'rgba(255,255,255, 0.6)',
+				highlightBorderWidth: 1,
+				highlightBorderOpacity: 1
+			},
+			bubblesConfig: {
+				borderWidth: 0,
+				borderOpacity: 0,
+				borderColor: '#FFFFFF',
+				popupOnHover: true,
+				radius: radius,
+				popupTemplate: function(geo, data) {
+					return `<div class='hoverinfo'> ${(data.city ? '<strong>'+data.city+'</strong>' : "Unknown")}<br>${data.ip}</div>`;
+				},
+				fillOpacity: 0.30,
+				animate: true,
+				highlightOnHover: true,
+				highlightFillColor: 'rgba(225, 40, 11, 1.00)',
+				highlightBorderColor: 'rgba(225, 40, 11, 0.3)',
+				highlightBorderWidth: 1,
+				highlightBorderOpacity: 0.35,
+				highlightFillOpacity: 0.85,
+				exitDelay: 100,
+				key: plots
+			}
+		})
+
+
+		// Load plots from API
+		$.getJSON("ip_coordinates.json", function(data) {
+			plots = data;
+
+			//console.log(topCityCount(10));
+
+			plots.forEach((element)=> {
+				element.radius = radius;
+				element.fillKey = "plot";
+			})
+
+			//bubbles, custom popup on hover template
+			map.bubbles(plots);
+			
+			console.log("Plots loaded")
+		});
+
+		function topCityCount(int) {
+			if (typeof(int) != "number"||int<1||int > plots.length) {
+				throw new Error(`Invalid argument in topCityCount() - ${int}`);
+				return;
+			}
+			var dict = {};
+			//Compile list of city,iptable objects by breaking down plots.
+			for (var i = 0; i < plots.length; i++) {
+				var city;
+				if (plots[i].city!="") {
+					city = plots[i].city;
+					dict[city] ? dict[city].iptable.push(plots[i].ip) : dict[city] = {
+						name: city, 
+						iptable:[ plots[i].ip ]
+					};
+				}
+			}
+
+			// Object to Array.
+			var cityArr = [];
+			for (var i in dict) {
+				cityArr.push(dict[i]);
+			}
+			// Sort array greatest to least.
+			cityArr.sort((a,b) => {
+				return b.iptable.length - a.iptable.length;
+			})
+
+			cityArr = cityArr.splice(0,int);
+			for (var i = 0; i < cityArr.length; i++) {
+				console.log(`${cityArr[i].iptable.length}\t${cityArr[i].name}`)
+			}
+		}
+
+		// console.log(topCityCount(10));
+
+		$(function(){
+			$("#up").button({
+				icon: "ui-icon-circle-arrow-n"
+			}).on("click",(event,ui)=> {
+				console.log("test")
+				if (radius<5) radius+=0.25;
+				d3.selectAll("circle").style("r",radius);
+			})
+
+			$("#down").button({
+				icon: "ui-icon-circle-arrow-s"
+			}).on("click",(event,ui)=> {
+				if (radius>1.5) radius-=0.25;
+				d3.selectAll("circle").style("r",radius);
+			})
+
+			$("#slider").slider({
+				min:5,
+				max:75,
+				value: map.options.bubblesConfig.fillOpacity*100,
+				slide: (event,ui)=>{
+					d3.selectAll("circle").style("fill-opacity",ui.value/100);
+				}
+			});
+		});
+		$(window).on('resize', function() {
+			map.resize();
+		});
+		
+	</script>
+</body>
+</html>
