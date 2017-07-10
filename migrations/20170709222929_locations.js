@@ -10,7 +10,6 @@ exports.up = function(knex, Promise) {
       table.decimal("longitude");
       table.string("metroCode");
       table.string("areaCode");
-      table.string("ip");
   })
 };
 
