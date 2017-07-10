@@ -1,0 +1,11 @@
+// Update with your config settings.
+
+module.exports = {
+  client: 'postgresql',
+  connection: {
+    host: 'localhost',
+    database:   'botmap',
+    user:       'botmap_user',
+    password:   '' 
+  }
+};
