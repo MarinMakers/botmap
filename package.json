@@ -18,6 +18,7 @@
   "homepage": "https://github.com/MarinMakers/botmap#readme",
   "dependencies": {
     "express": "^4.15.3",
-    "knex": "^0.13.0"
+    "knex": "^0.13.0",
+    "pg": "^6.4.0"
   }
 }
