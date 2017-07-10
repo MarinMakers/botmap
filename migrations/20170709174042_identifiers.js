@@ -1,12 +1,12 @@
 
 exports.up = function(knex, Promise) {
-  knex("botmap").createTable(function(table) {
-  	table.incrementer("id");
+  return knex.schema.createTable("identifiers", function(table) {
+  	table.increments("id").primary();
   	table.string("user_id");
 
   })
 };
 
 exports.down = function(knex, Promise) {
-  knex().dropTable("identifiers");
+  return knex.schema.dropTable("identifiers");
 };
