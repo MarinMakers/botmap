@@ -2,8 +2,44 @@
 <html>
 <head>
 	<title>Botmap</title>
+	<style type="text/css">
+		
+		body {
+			background-color: #f6f6f6;
+			color: #222;
+		}
+		#iplist {
+			width:500px;
+			height:300px; 
+			padding: 5px;
+		}
+		h3 {
+			color: #6565be;
+			margin: 0;
+		}
+		.container {
+			max-width: 500px;
+			margin: 0 auto;
+		}
+		input[type="submit"] {
+			background-color: #6565be;
+			padding: 5px 10px;
+			color: white;
+			border: none;
+			border-radius: 5px;
+			margin: 10px auto;
+		}
+	</style>
 </head>
 <body>
-<h1>Graphic design is my passion</h1>
+	<div class="container">
+		<h1>Welcome to Botmap</h1>
+		<p>Botmap is an application that will allow you to view multiple IP addressess on a map. It is recommended that you use a CSV of IP addresses separated by a consistant character, such as spaces, commas, or newlines.</p>
+		<form action="map" method="post">
+			<label for="iplist"><h3>Dump your logs here</h3></label>
+			<textarea id="iplist" name="iplist" placeholder="8.8.8.8 1.2.3.4 3.4.5.6 ..." minlength="4"></textarea><br>
+			<input type="submit" name="submit" value="Test">
+		</form>
+	</div>
 </body>
 </html>
