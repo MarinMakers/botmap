@@ -47,14 +47,14 @@ app.get("/map", function (req,res) {
 	res.sendFile(__dirname+"/public/map.html")
 	//next()
 })
-app.post("/map", function (req,res) {
-	//console.log("POST",req.body.iplist);
-
+app.post("/submit", function (req,res) {
 	var ipArr = req.body.iplist.split(/[\r\n\,\ ]/).filter(function(n){ 
 		if (n==="") return false
 		return n != undefined
 	});
-
+	if (validIPArr(ipArr)) {
+		console.log(ipArr)
+	}
 
 
 	res.sendFile(__dirname+"/public/map.html")
@@ -65,7 +65,7 @@ app.use("/",express.static("public"));
 
 
 //This MUST be the last route
-app.use(errorHandler);
+// app.use(errorHandler);
 app.listen(PORT, ()=> {
 	console.log(`Server is live at port ${PORT}`)
 });
