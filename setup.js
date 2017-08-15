@@ -70,7 +70,7 @@ new Promise((resolve, reject)=> {
 	});
 
 	//On Close
-	lr.on("close", function() {
+	lr.on("end", function() {
 		//Resolve all database inserts, then move on to next step.
 		Promise.all(promiseArr).then(()=>{
 			console.log("Location reader finished.")
