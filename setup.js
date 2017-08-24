@@ -3,17 +3,22 @@ const knex = require("knex")(require("./knexfile.js"));
 const fs = require("fs");
 const LineByLineReader = require("line-by-line");
 
-
-function getIPRange(ipaddr) {
-    var bitCount = parseInt(ipaddr.split("/").pop())
-    var octets = ipaddr.split("/")[0].split(".").map(function(x){
+function iPToInt(ipaddr) {
+	var octets = ipaddr.split("/")[0].split(".").map(function(x){
       return parseInt(x)
     })
 
-    var min = (octets[0] * 16777216) + (octets[1] * 65536) + (octets[2] * 256) + (octets[3]);
+	return (octets[0] * 16777216) + (octets[1] * 65536) + (octets[2] * 256) + (octets[3]) -2147483648;
+}
+
+function getIPRange(ipaddr) {
+    var bitCount = parseInt(ipaddr.split("/").pop())
+
+    var min = iPToInt(ipaddr);
     var max  = min + Math.pow(2, 32-bitCount) - 1;
     return {min,max};
 }
+
 
 function intToIP(int) {
     var part1 = int & 255;
@@ -83,19 +88,16 @@ new Promise((resolve, reject)=> {
 	
 	var db = knex("ip_ranges"),
 		lr = new LineByLineReader("./csv/GeoLite2-City-Blocks-IPv4.csv"),
-		i = 0;
+		i = 0,
+		batch = 0,
+		insertString = "";
 	
 
 	db.truncate();
 
 	lr.on('line', function (line) {
 		if (line.startsWith("network")) return;
-
-
-		console.log(i);
-		i++;
 		lr.pause();
-
 
 		var line = line.split(",");
 		var backup = line;
@@ -122,11 +124,13 @@ new Promise((resolve, reject)=> {
 		if (isNaN(d.latitude) || isNaN(d.longitude) || isNaN(d.accuracy_radius)) {
 			return lr.resume();
 		}  else {
-			knex.transaction(function(t) {
-				return db.transacting(t).insert({
+
+
+			if (i < 10000) {
+				data = db.insert({
 						"network": d.network,
 						"start_ip_int": d.start_ip_int,
-						"end_ip_int": d.end_ip_int,
+						"end_ip_int": (d.end_ip_int<2147483647?d.end_ip_int:2147483647),
 						"geoname_id": d.geoname_id,
 						"registered_country_geoname_id": d.registered_country_geoname_id,
 						"represented_country_geoname_id": d.represented_country_geoname_id,
@@ -136,26 +140,30 @@ new Promise((resolve, reject)=> {
 						"latitude": d.latitude,
 						"longitude": d.longitude,
 						"accuracy_radius": d.accuracy_radius
-					})
-					.then(()=>{
-						lr.resume()
-						t.commit;
-						d = null
-					})
-					.catch(function(e) {
-						//t.rollback();
-						console.log(e,d);
-						throw e;
-					})
-			}).then().catch((e)=>{
-				console.log(e)
-			})
+					}).toString();
+				insertString+=data+";";
+
+				i++;
+				lr.resume();
+			}  else {
+				knex.raw(insertString).then(()=>{
+					console.log("Handling batch ", batch);
+					i = 0;
+					batch++;
+					insertString = "";
+					lr.resume();
+				}).catch(e=>console.log(e,d))
+			}
 
 		}
 	});
-
+	lr.on("end",function() {
+		if (insertString.length > 0) {
+			knex.raw(insertString).then(()=> {
+				console.log("test")
+			})
+		}
+	})
 })).then(()=>{
-	console.log(ipdata);
 	console.log("Setup complete.");
-	process.exit(0);
 });

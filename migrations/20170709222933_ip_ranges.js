@@ -1,7 +1,7 @@
 
 exports.up = function(knex, Promise) {
 	return knex.schema.createTable("ip_ranges", function(table) {
-		//table.increments("id").primary();
+		table.increments("id").primary();
 		table.string("network");
 		table.integer("start_ip_int");
 		table.integer("end_ip_int");

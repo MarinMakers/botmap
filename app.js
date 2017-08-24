@@ -5,6 +5,7 @@ const path = require('path');
 const knex = require("knex")(require("./knexfile.js"))
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
+const uuid = require('uuid');
 
 const PORT = 1337;
 
@@ -33,31 +34,82 @@ function validIPArr(arr) {
 	}
 	return true
 }
+function intToIP(int) {
+    var part1 = int & 255;
+    var part2 = ((int >> 8) & 255);
+    var part3 = ((int >> 16) & 255);
+    var part4 = ((int >> 24) & 255);
 
+    return part4 + "." + part3 + "." + part2 + "." + part1;
+}
+
+function iPToInt(ipaddr) {
+	var octets = ipaddr.split("/")[0].split(".").map(function(x){
+      return parseInt(x)
+    })
+
+	return (octets[0] * 16777216) + (octets[1] * 65536) + (octets[2] * 256) + (octets[3]) -2147483648;
+}
+
+function getIPRange(ipaddr) {
+    var bitCount = parseInt(ipaddr.split("/").pop())
+
+    var min = iPToInt(ipaddr);
+    var max  = min + Math.pow(2, 32-bitCount) - 1;
+    return {min,max};
+}
 
 
 //Routes
 app.get("/", function (req,res,next) {
-	console.log(req.params)
+	console.log(req.query)
 	next()
 })
 
 app.get("/map", function (req,res) {
-	console.log(`GET map with`, req.params)
+	console.log(`GET map with`, req.query)
 	res.sendFile(__dirname+"/public/map.html")
 	//next()
 })
 app.post("/submit", function (req,res) {
-	var ipArr = req.body.iplist.split(/[\r\n\,\ ]/).filter(function(n){ 
+	var ipArr = req.body.iplist.split(/[\r\n\,\ \|_-]/).filter(function(n){ 
 		if (n==="") return false
 		return n != undefined
 	});
 	if (validIPArr(ipArr)) {
-		console.log(ipArr)
+		
+		var userID = uuid.v1();
+		(function() {
+
+			//let batch = "";
+			while(ipArr.length>0){
+				
+				ipInt = iPToInt(ipArr.pop())
+				knex("ip_ranges").select("id").where('start_ip_int', '<', ipInt).andWhere('end_ip_int', '>',ipInt).then((data)=>{
+					locationID = data[0].id
+					knex("identifiers").insert({
+						"user_id": userID,
+						"loc_id": locationID
+					}).then()
+					//console.log(badabing)
+				}).catch(e=>console.log(e))
+			}
+			// console.log(batch);
+			// knex.raw(batch).then(
+			// 	data => console.log(data)
+			// ).catch(
+			// 	e=>console.log(e)
+			// );
+		})()
+
+
+
+		res.sendFile(__dirname+"/public/map.html")
+	}  else {
+		console.log("Failed.")
 	}
 
 
-	res.sendFile(__dirname+"/public/map.html")
 	//next()
 })
 
