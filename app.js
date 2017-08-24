@@ -68,7 +68,9 @@ app.get("/", function (req,res,next) {
 
 app.get("/map", function (req,res) {
 	console.log(`GET map with`, req.query)
-	res.sendFile(__dirname+"/public/map.html")
+	if (req.query.id) {
+		res.sendFile(__dirname+"/public/map.html")
+	}
 	//next()
 })
 app.post("/submit", function (req,res) {
@@ -77,11 +79,8 @@ app.post("/submit", function (req,res) {
 		return n != undefined
 	});
 	if (validIPArr(ipArr)) {
-		
 		var userID = uuid.v1();
 		(function() {
-
-			//let batch = "";
 			while(ipArr.length>0){
 				
 				ipInt = iPToInt(ipArr.pop())
@@ -91,26 +90,37 @@ app.post("/submit", function (req,res) {
 						"user_id": userID,
 						"loc_id": locationID
 					}).then()
-					//console.log(badabing)
 				}).catch(e=>console.log(e))
 			}
-			// console.log(batch);
-			// knex.raw(batch).then(
-			// 	data => console.log(data)
-			// ).catch(
-			// 	e=>console.log(e)
-			// );
 		})()
 
 
 
-		res.sendFile(__dirname+"/public/map.html")
+		res.redirect("/map?id="+userID)
 	}  else {
-		console.log("Failed.")
+		res.send("Bad POST request")
 	}
 
 
 	//next()
+})
+
+app.get("/lookup", function(req,res) {
+	if (req.query.id.match(/([a-f\d]{8}(-[a-f\d]{4}){3}-[a-f\d]{12}?)/i)){
+		// TODO: Trim this up to the essentials.
+		knex("identifiers")
+		.select("*")
+		.join("ip_ranges",function(){
+			this.on("identifiers.loc_id","=","ip_ranges.id")
+		}).join("locations",function(){
+			this.on("ip_ranges.geoname_id", "=", "locations.geoname_id")
+		})
+		.where("user_id",req.query.id).then((data)=>{
+			res.json(data)
+		})
+	} else {
+		res.send("Nope")
+	}
 })
 
 app.use("/",express.static("public"));
